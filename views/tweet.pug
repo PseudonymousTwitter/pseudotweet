@@ -1,0 +1,44 @@
+html
+  head
+    meta(name='viewport', content='width=device-width')
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+
+
+    style
+      include styles.css
+    title= title
+    body
+      div.container
+      .content
+
+        //- Let the user submit a tweet anonymously with just a text box and submit button
+        form(id="tweet" method="post" action="/tweet")
+            textarea.ipt#tweetbox(type="text", name="tweet" value="" autofocus maxlength="280" placeholder="Your Tweet here" rows="3")
+            div
+              span#count 0
+              span / 280
+            br
+            button.btn-primary(type="submit") Submit tweet
+
+    script.
+          // let the user know how many characters they have left out of 280 total
+          const input = document.getElementById('tweetbox');
+
+          const updateCount = () => {
+            const newLength = input.value.length;
+             document.getElementById('count').innerHTML = newLength;
+          }
+          input.addEventListener('keyup', updateCount)
+    script
+
+      block messages
+      if locals.flashes
+        .inner
+          .flash-messages
+            - const categories = Object.keys(locals.flashes)
+            each category in categories
+              each message in flashes[category]
+                .flash(class=`flash--${category}`)
+                  p.flash__text!= message
+                  button.flash__remove(onClick="this.parentElement.remove()") &times;
+
